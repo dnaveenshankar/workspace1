@@ -1,0 +1,12 @@
+package com.wipro.orderservice.model;
+
+
+@Getter
+@Setter
+public class OrderItem {
+
+	private int orderItemId;
+	private Mobile mobile;
+	private int qty;
+	private double itemTotal;
+}

@@ -1,0 +1,32 @@
+package com.wipro.studentservice.service;
+
+import com.wipro.studentservice.entity.Student;
+import com.wipro.studentservice.exception.ResourceNotFoundException;
+import com.wipro.studentservice.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class StudentServiceImpl implements StudentService {
+
+    @Autowired
+    private StudentRepository studentRepository;
+
+    @Override
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
+    @Override
+    public Student getStudentById(int studentId) {
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found with ID: " + studentId));
+    }
+
+    @Override
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+}

@@ -1,0 +1,15 @@
+package com.wipro.registrationservice.model;
+
+import com.wipro.registrationservice.entity.Registration;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class CourseRegistrationDTO {
+    private Registration registration;
+    private StudentDTO student;
+    private CourseDTO course;
+}

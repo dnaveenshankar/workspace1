@@ -1,0 +1,108 @@
+package com.wipro.registrationservice.service;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.exception.ResourceNotFoundException;
+import com.wipro.registrationservice.model.CourseDTO;
+import com.wipro.registrationservice.model.CourseRegistrationDTO;
+import com.wipro.registrationservice.model.StudentDTO;
+import com.wipro.registrationservice.repository.RegistrationRepository;
+
+@Service
+public class RegistrationServiceImpl implements RegistrationService {
+
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private StudentApiClient studentApiClient;
+
+    @Autowired
+    private CourseApiClient courseApiClient;
+
+    @Override
+    public Registration registerStudent(int studentId, int courseId, double feesPaid) {
+        // Create a new Registration object
+        Registration registration = new Registration();
+
+        // Assign student and course IDs
+        registration.setStudentId(studentId);
+        registration.setCourseId(courseId);
+
+        // Get the current date and set it
+        LocalDate currentDate = LocalDate.now();
+        registration.setDateOfRegistration(currentDate);
+
+        // Fetch course details
+        CourseDTO course = courseApiClient.getCourseDetails(courseId);
+        if (course == null) {
+            throw new ResourceNotFoundException("Course not found with ID: " + courseId);
+        }
+
+        // Extract course fees
+        double courseFees = course.getCourseFees();
+
+        // Set the paid fees
+        registration.setFeesPaid(feesPaid);
+
+        // Calculate pending fees
+        double feesPending = courseFees - feesPaid;
+        registration.setFeesPending(feesPending);
+
+        // Set registration status
+        String status = "Enrolled";
+        registration.setStatus(status);
+
+        // Save registration to the repository
+        return registrationRepository.save(registration);
+    }
+
+    @Override
+    public Registration getRegistrationById(int registrationId) {
+        // Fetch registration from the repository
+        Optional<Registration> optionalRegistration = registrationRepository.findById(registrationId);
+        
+        // Check if the registration exists, else throw an exception
+        if (optionalRegistration.isEmpty()) {
+            throw new ResourceNotFoundException("Registration not found with ID: " + registrationId);
+        }
+
+        // Return the registration details
+        return optionalRegistration.get();
+    }
+
+    @Override
+    public CourseRegistrationDTO getFullRegistrationDetails(int registrationId) {
+        // Get the registration details
+        Registration registration = getRegistrationById(registrationId);
+
+        // Get student ID and course ID
+        int studentId = registration.getStudentId();
+        int courseId = registration.getCourseId();
+
+        // Fetch student details
+        StudentDTO student = studentApiClient.getStudentDetails(studentId);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student not found with ID: " + studentId);
+        }
+
+        // Fetch course details
+        CourseDTO course = courseApiClient.getCourseDetails(courseId);
+        if (course == null) {
+            throw new ResourceNotFoundException("Course not found with ID: " + courseId);
+        }
+
+        // Create CourseRegistrationDTO object and set values
+        CourseRegistrationDTO courseRegistrationDTO = new CourseRegistrationDTO();
+        courseRegistrationDTO.setRegistration(registration);
+        courseRegistrationDTO.setStudent(student);
+        courseRegistrationDTO.setCourse(course);
+
+        return courseRegistrationDTO;
+    }
+}

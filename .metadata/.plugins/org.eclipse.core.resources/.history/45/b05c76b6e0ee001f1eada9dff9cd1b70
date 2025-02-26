@@ -1,0 +1,26 @@
+package com.wipro.registrationservice.entity;
+
+import java.util.Date;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+
+@Table(name = "course_registration_tbl")
+public class CourseRegistration {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int registrationId;
+
+    private int courseId;
+    private int studentId;
+    private Date dateOfRegistration;
+    private double feesPaid;
+    private double feesPending;
+    private String status;
+}

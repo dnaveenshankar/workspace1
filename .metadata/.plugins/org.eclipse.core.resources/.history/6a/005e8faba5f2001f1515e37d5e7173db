@@ -1,0 +1,13 @@
+package com.wipro.consumer.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class NotificationService {
+
+	@KafkaListener<topics="order-topic", groupId="">
+	public void sendNotification(Order order) {
+		
+	}
+	
+}

@@ -1,0 +1,40 @@
+package com.wipro.jwtsecurity;
+
+import java.io.IOException;
+
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.wipro.jwtsecurity.util.JwtTokenUtil;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
+
+public class JwtAuthendicationFilter extends OncePerRequestFilter {
+
+	@Autowired
+	private JwtTokenUtil jwtTokenUtil;
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+		 
+		String token = getTokenFromRequest(request);
+		
+		
+	}
+	
+	
+	private String getTokenFromRequest(HttpServletRequest request) {
+	    String authToken = request.getHeader("Authorization");
+
+	    if (StringUtils.hasText(authToken) && authToken.startsWith("Bearer ")) {
+	        return authToken.substring(7, authToken.length());
+	    }
+	    return null;
+	}
+}

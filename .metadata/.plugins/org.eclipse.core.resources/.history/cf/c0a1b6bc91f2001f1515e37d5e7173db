@@ -1,0 +1,14 @@
+package com.wipro.producer;
+
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class TopicConfiguration {
+
+	public NewTopic createTopic(){
+		
+		
+	}
+}
+	

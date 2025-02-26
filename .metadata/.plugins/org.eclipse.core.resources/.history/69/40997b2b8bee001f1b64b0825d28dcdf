@@ -1,0 +1,15 @@
+package com.wipro.orderservice.model;
+
+import java.time.LocalDate;
+
+public class Invoice {
+
+	private int orderId;
+	private LocalDate orderDate;
+	private double orderAmount;
+	private String orderStatus; 
+	
+	private List<> orderItems;
+	
+	private Customer customer
+}

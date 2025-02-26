@@ -1,0 +1,25 @@
+package com.wipro.orderservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.wipro.orderservice.entity.Order;
+import com.wipro.orderservice.service.OrderService;
+
+@RestController
+@RequestMapping("/order")
+public class OrderController {
+
+    @Autowired
+    private OrderService orderService;
+
+    @PostMapping("/placeorder")
+    public ResponseEntity<Order> createOrder(@RequestBody List<OrderItem> orderItems){
+    	
+    	orderService.placeOrder(0, null);
+    	
+    	return null;
+    }
+}

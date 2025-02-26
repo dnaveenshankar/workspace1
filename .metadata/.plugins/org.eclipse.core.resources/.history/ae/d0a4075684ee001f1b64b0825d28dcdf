@@ -1,0 +1,18 @@
+package om.wipro.orderservice.model;
+
+import java.time.LocalDate;
+
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Getter
+@Setter
+public class Mobile {
+	
+	private int moileID;
+	private int mobileName;
+	private double price;
+	private LocalDate mfd;
+	private String companyName;
+}

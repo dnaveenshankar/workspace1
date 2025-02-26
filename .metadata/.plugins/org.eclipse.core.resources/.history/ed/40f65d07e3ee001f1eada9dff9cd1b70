@@ -1,0 +1,12 @@
+package com.wipro.registrationservice.service;
+
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.model.RegistrationResponseDTO;
+
+import java.util.List;
+
+public interface RegistrationService {
+    Registration registerStudent(Registration registration);
+    Registration getRegistrationById(int registrationId);
+    RegistrationResponseDTO getFullRegistrationDetails(int registrationId);
+}

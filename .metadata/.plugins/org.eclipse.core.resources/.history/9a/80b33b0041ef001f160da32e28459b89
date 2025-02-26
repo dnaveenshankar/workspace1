@@ -1,0 +1,83 @@
+package com.wipro.registrationservice.service;
+
+import java.time.LocalDate;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.exception.ResourceNotFoundException;
+import com.wipro.registrationservice.model.CourseDTO;
+import com.wipro.registrationservice.model.CourseRegistrationDTO;
+import com.wipro.registrationservice.model.StudentDTO;
+import com.wipro.registrationservice.repository.RegistrationRepository;
+
+@Service
+public class RegistrationServiceImpl implements RegistrationService {
+
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private StudentApiClient studentApiClient;
+
+    @Autowired
+    private CourseApiClient courseApiClient;
+
+    @Override
+    public Registration registerStudent(Registration registration) {
+        CourseDTO course = courseApiClient.getCourseDetails(registration.getCourseId());
+
+        double feesPaid = registration.getFeesPaid();
+        double courseFees = course.getCourseFees();
+        double feesPending = courseFees - feesPaid;
+
+        registration.setDateOfRegistration(LocalDate.now());
+        registration.setFeesPending(feesPending);
+        registration.setStatus("Enrolled");
+
+        return registrationRepository.save(registration);
+    }
+
+    @Override
+    public Registration getRegistrationById(int registrationId) {
+        Optional<Registration> optionalRegistration = registrationRepository.findById(registrationId);
+
+        if (optionalRegistration.isEmpty()) {
+            throw new ResourceNotFoundException("Registration not found with ID: " + registrationId);
+        }
+
+        return optionalRegistration.get();
+    }
+
+
+    @Override
+    public CourseRegistrationDTO getFullRegistrationDetails(int registrationId) {
+        Registration registration = getRegistrationById(registrationId);
+
+        CourseRegistrationDTO courseRegistrationDTO = new CourseRegistrationDTO();
+
+        courseRegistrationDTO.setRegistrationId(registration.getRegistrationId());
+        courseRegistrationDTO.setDateOfRegistration(registration.getDateOfRegistration());
+        courseRegistrationDTO.setFeesPaid(registration.getFeesPaid());
+        courseRegistrationDTO.setFeesPending(registration.getFeesPending());
+        courseRegistrationDTO.setStatus(registration.getStatus());
+
+        int studentId = registration.getStudentId();
+        StudentDTO student = studentApiClient.getStudentDetails(studentId);
+        courseRegistrationDTO.setStudentId(student.getStudentId());
+        courseRegistrationDTO.setFirstName(student.getFirstName());
+        courseRegistrationDTO.setLastName(student.getLastName());
+        courseRegistrationDTO.setEmail(student.getEmail());
+        courseRegistrationDTO.setMobile(student.getMobile());
+        courseRegistrationDTO.setAge(student.getAge());
+
+        int courseId = registration.getCourseId();
+        CourseDTO course = courseApiClient.getCourseDetails(courseId);
+        courseRegistrationDTO.setCourseId(course.getCourseId());
+        courseRegistrationDTO.setCourseName(course.getCourseName());
+        courseRegistrationDTO.setDuration(course.getDuration());
+        courseRegistrationDTO.setCourseFees(course.getCourseFees());
+
+        return courseRegistrationDTO;
+    }
+}

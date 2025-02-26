@@ -1,0 +1,8 @@
+package com.wipro.security_demo.controller;
+
+@RestController
+@RequestMapping("/api")
+
+public class HelloController {
+
+}

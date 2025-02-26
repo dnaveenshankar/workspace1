@@ -1,0 +1,5 @@
+package com.wipro.orderservice.service;
+
+public class MobileApiClient {
+
+}

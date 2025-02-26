@@ -1,0 +1,3 @@
+spring.application.name=mobilestore-api-gateway
+
+server.port=9090

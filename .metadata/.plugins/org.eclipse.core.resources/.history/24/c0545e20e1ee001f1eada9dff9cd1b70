@@ -1,0 +1,5 @@
+package com.wipro.registrationservice.repository;
+
+public class RegistrationRepository {
+
+}

@@ -1,0 +1,5 @@
+package com.wipro.registrationservice.entity;
+
+public class CourseRegistration {
+
+}

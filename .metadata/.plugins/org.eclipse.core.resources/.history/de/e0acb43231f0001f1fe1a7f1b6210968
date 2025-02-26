@@ -1,0 +1,32 @@
+package com.wipro.security_demo;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+	@Bean
+	UserDetailsService appUserDetails() {
+		
+		InMemoryUserDetailsManager userDetailsManager = new InMemoryUserDetailsManager();
+		
+		userDetailsManager.createUser(User.withUsername("Naveen").password("naveen@123").roles("USER").build());
+		userDetailsManager.createUser(User.withUsername("user").password("user@123").roles("USER").build());
+		userDetailsManager.createUser(User.withUsername("raj").password("raj@123").roles("USER","ADMIN").build());
+		
+		return userDetailsManager;
+	}
+	
+	SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception{
+		return null;
+		
+	}
+}

@@ -1,0 +1,14 @@
+package com.wipro.consumer.service;
+
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.stereotype.Service;
+import com.wipro.consumer.model.Order;
+
+@Service
+public class NotificationService {
+
+    @KafkaListener(topics = "order-topic", groupId = "order-group")
+    public void sendNotification(Order order) {
+        System.out.println("Hello " + order.getCustomerName() + ", Your Order of Rs" + order.getOrderAmount() + " is placed.");
+    }
+}

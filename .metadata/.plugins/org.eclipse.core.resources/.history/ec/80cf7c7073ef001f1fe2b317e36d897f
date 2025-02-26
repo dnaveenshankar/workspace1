@@ -1,0 +1,13 @@
+package com.wipro.orderservice.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+@RestController
+public class DemoController {
+
+	@GetMapping("/data")
+	public String getData() {
+		
+		return null;
+	}
+}

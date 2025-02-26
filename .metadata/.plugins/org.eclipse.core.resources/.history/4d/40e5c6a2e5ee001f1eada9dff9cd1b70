@@ -1,0 +1,71 @@
+package com.wipro.registrationservice.service;
+
+import java.time.LocalDate;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.exception.ResourceNotFoundException;
+import com.wipro.registrationservice.model.CourseDTO;
+import com.wipro.registrationservice.model.CourseRegistrationDTO;
+import com.wipro.registrationservice.model.StudentDTO;
+import com.wipro.registrationservice.repository.RegistrationRepository;
+
+@Service
+public class RegistrationServiceImpl implements RegistrationService {
+    
+    @Autowired
+    private RegistrationRepository registrationRepository;
+    
+    @Autowired
+    private StudentApiClient studentApiClient;
+    
+    @Autowired
+    private CourseApiClient courseApiClient;
+
+    @Override
+    public Registration registerStudent(int studentId, int courseId, double feesPaid) {
+        CourseDTO course = courseApiClient.getCourseDetails(courseId);
+        
+        Registration registration = new Registration();
+        registration.setStudentId(studentId);
+        registration.setCourseId(courseId);
+        registration.setDateOfRegistration(LocalDate.now());
+        registration.setFeesPaid(feesPaid);
+        registration.setFeesPending(course.getCourseFees() - feesPaid);
+        registration.setStatus("Enrolled");
+        
+        return registrationRepository.save(registration);
+    }
+
+    @Override
+    public Registration getRegistrationById(int registrationId) {
+        Optional<Registration> optionalRegistration = registrationRepository.findById(registrationId);
+        
+        if (optionalRegistration.isEmpty()) {
+            throw new ResourceNotFoundException("Registration not found with ID: " + registrationId);
+        }
+        
+        return optionalRegistration.get();
+    }
+
+    @Override
+    public CourseRegistrationDTO getFullRegistrationDetails(int registrationId) {
+        Registration registration = getRegistrationById(registrationId);
+        
+        int studentId = registration.getStudentId();
+        int courseId = registration.getCourseId();
+        
+        StudentDTO student = studentApiClient.getStudentDetails(studentId);
+        CourseDTO course = courseApiClient.getCourseDetails(courseId);
+        
+        CourseRegistrationDTO courseRegistrationDTO = new CourseRegistrationDTO();
+        courseRegistrationDTO.setRegistration(registration);
+        courseRegistrationDTO.setStudent(student);
+        courseRegistrationDTO.setCourse(course);
+        
+        return courseRegistrationDTO;
+    }
+}

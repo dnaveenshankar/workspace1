@@ -1,0 +1,7 @@
+package com.wipro.producer.service;
+
+@Service
+public class ProductService {
+
+	public void sendOrder(Order order)
+}

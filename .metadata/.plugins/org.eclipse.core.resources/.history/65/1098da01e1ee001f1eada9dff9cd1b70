@@ -1,0 +1,29 @@
+package com.wipro.registrationservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/registrations")
+public class RegistrationController {
+
+    @Autowired
+    private RegistrationService registrationService;
+
+    @PostMapping("/save")
+    public CourseRegistrationDTO registerCourse(@RequestBody CourseRegistrationDTO registrationDTO) {
+        return registrationService.registerCourse(registrationDTO);
+    }
+
+    @GetMapping("/{id}")
+    public CourseRegistrationDTO getRegistrationById(@PathVariable int id) {
+        return registrationService.getRegistrationById(id);
+    }
+
+    @GetMapping("/all")
+    public List<CourseRegistrationDTO> getAllRegistrations() {
+        return registrationService.getAllRegistrations();
+    }
+}

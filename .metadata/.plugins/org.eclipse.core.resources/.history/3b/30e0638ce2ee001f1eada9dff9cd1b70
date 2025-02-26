@@ -1,0 +1,10 @@
+package com.wipro.registrationservice.service;
+
+import com.wipro.registrationservice.entity.Registration;
+import java.util.List;
+
+public interface RegistrationService {
+    Registration register(Registration registration);
+    Registration getRegistrationById(int id);
+    List<Registration> getAllRegistrations();
+}

@@ -1,0 +1,63 @@
+package com.wipro.registrationservice.service;
+
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.exception.ResourceNotFoundException;
+import com.wipro.registrationservice.model.CourseDTO;
+import com.wipro.registrationservice.model.StudentDTO;
+import com.wipro.registrationservice.repository.RegistrationRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.Optional;
+
+@Service
+public class RegistrationServiceImpl implements RegistrationService {
+
+    @Autowired
+    private RegistrationRepository registrationRepository;
+
+    @Autowired
+    private CourseApiClient courseApiClient;
+
+    @Autowired
+    private StudentApiClient studentApiClient;
+
+    @Override
+    public Registration registerStudent(int studentId, int courseId, double feesPaid) {
+        // Fetch student details using Feign Client
+        StudentDTO student = studentApiClient.getStudentById(studentId);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student not found with ID: " + studentId);
+        }
+
+        // Fetch course details using Feign Client
+        CourseDTO course = courseApiClient.getCourseById(courseId);
+        if (course == null) {
+            throw new ResourceNotFoundException("Course not found with ID: " + courseId);
+        }
+
+        double totalFees = course.getCourseFees();
+        double feesPending = totalFees - feesPaid;
+
+        // Create a new registration entity
+        Registration registration = new Registration();
+        registration.setStudentId(studentId);
+        registration.setCourseId(courseId);
+        registration.setDateOfRegistration(LocalDate.now());
+        registration.setFeesPaid(feesPaid);
+        registration.setFeesPending(feesPending);
+        registration.setStatus("Enrolled");
+
+        // Save registration to database
+        return registrationRepository.save(registration);
+    }
+
+    @Override
+    public Registration getRegistrationById(int registrationId) {
+        Optional<Registration> optionalRegistration = registrationRepository.findById(registrationId);
+        if (optionalRegistration.isEmpty()) {
+            throw new ResourceNotFoundException("Registration not found with ID: " + registrationId);
+        }
+        return optionalRegistration.get();
+    }
+}

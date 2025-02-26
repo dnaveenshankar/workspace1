@@ -1,0 +1,8 @@
+package com.wipro.orderservice.model;
+
+public class Snippet {
+	public static void main(String[] args) {
+		com.wipro.orderservice.
+	}
+}
+

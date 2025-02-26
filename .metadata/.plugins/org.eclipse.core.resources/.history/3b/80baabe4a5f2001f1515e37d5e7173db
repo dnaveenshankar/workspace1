@@ -1,0 +1,10 @@
+package com.wipro.consumer.model;
+
+public class Order {
+
+	private int orderId;
+	private double orderAmount;
+	private String email;
+	private String mobile;
+	private String customerName;
+}

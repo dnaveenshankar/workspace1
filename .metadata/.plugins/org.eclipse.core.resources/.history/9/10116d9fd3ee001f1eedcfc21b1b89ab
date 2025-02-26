@@ -1,0 +1,33 @@
+package com.wipro.studentservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.wipro.studentservice.entity.Student;
+import com.wipro.studentservice.service.StudentService;
+
+@RestController
+@RequestMapping("/students")
+public class StudentController {
+
+    @Autowired
+    private StudentService studentService;
+    
+    @PostMapping("/add")
+    public Student saveStudent(@RequestBody Student student) {
+        return studentService.saveStudent(student);
+    }
+    
+    @GetMapping("/view")
+    public List<Student> getAllStudents() {
+        return studentService.getAllStudents();
+    }
+
+
+}

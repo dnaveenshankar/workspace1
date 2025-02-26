@@ -1,0 +1,13 @@
+package com.wipro.security_demo;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+	InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+	
+}

@@ -1,0 +1,5 @@
+package com.wipro.registrationservice.service;
+
+public class CourseApiClient {
+
+}

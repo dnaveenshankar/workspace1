@@ -1,0 +1,6 @@
+spring.application.name=config-server-app
+
+spring.cloud.config.server.git.uri="D:\\Wipro\\Phase - 2\\Projects\\workspace1\\myconfig-repo"
+
+spring.cloud.config.server.git.default-label=master
+

@@ -1,0 +1,31 @@
+package com.wipro.registrationservice.controller;
+
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.service.RegistrationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/registrations")
+public class RegistrationController {
+
+    @Autowired
+    private RegistrationService registrationService;
+
+    @PostMapping("/save")
+    public Registration register(@RequestBody Registration registration) {
+        return registrationService.register(registration);
+    }
+
+    @GetMapping("/view/{id}")
+    public Registration getRegistrationById(@PathVariable int id) {
+        return registrationService.getRegistrationById(id);
+    }
+
+    @GetMapping("/view-all")
+    public List<Registration> getAllRegistrations() {
+        return registrationService.getAllRegistrations();
+    }
+}

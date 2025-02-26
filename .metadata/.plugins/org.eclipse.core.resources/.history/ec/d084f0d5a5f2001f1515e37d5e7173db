@@ -1,0 +1,5 @@
+package com.wipro.consumer.model;
+
+public class Order {
+
+}

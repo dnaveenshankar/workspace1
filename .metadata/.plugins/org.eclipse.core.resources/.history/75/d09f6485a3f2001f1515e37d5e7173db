@@ -1,0 +1,13 @@
+package com.wipro.producer.service;
+import  com.wipro.producer.model.Order;
+
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class ProductService {
+
+	public void sendOrder(Order order) {
+		
+	}
+}

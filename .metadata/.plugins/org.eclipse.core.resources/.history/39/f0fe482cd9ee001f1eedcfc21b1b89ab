@@ -1,0 +1,5 @@
+package com.wipro.registrationservice.controller;
+
+public class RegistrationController {
+
+}

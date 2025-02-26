@@ -1,0 +1,23 @@
+package com.wipro.studentservice.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "student_tbl")
+public class Student {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long studentId;
+
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String mobile;
+    private int age;
+}
+

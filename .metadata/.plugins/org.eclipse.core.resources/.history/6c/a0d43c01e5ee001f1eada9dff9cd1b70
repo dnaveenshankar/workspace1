@@ -1,0 +1,50 @@
+package com.wipro.registrationservice.service;
+
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.wipro.registrationservice.entity.Registration;
+import com.wipro.registrationservice.exception.ResourceNotFoundException;
+import com.wipro.registrationservice.model.CourseDTO;
+import com.wipro.registrationservice.model.CourseRegistrationDTO;
+import com.wipro.registrationservice.model.StudentDTO;
+import com.wipro.registrationservice.repository.RegistrationRepository;
+
+@Service
+public class RegistrationServiceImpl implements RegistrationService {
+    
+    @Autowired
+    private RegistrationRepository registrationRepository;
+    
+    @Autowired
+    private StudentApiClient studentApiClient;
+    
+    @Autowired
+    private CourseApiClient courseApiClient;
+
+    @Override
+    public Registration registerStudent(Registration registration) {
+        CourseDTO course = courseApiClient.getCourseDetails(registration.getCourseId());
+        registration.setDateOfRegistration(LocalDate.now());
+        registration.setFeesPending(course.getCourseFees() - registration.getFeesPaid());
+        registration.setStatus("Enrolled");
+        return registrationRepository.save(registration);
+    }
+
+    @Override
+    public Registration getRegistrationById(int registrationId) {
+        return registrationRepository.findById(registrationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Registration not found with ID: " + registrationId));
+    }
+
+    @Override
+    public CourseRegistrationDTO getFullRegistrationDetails(int registrationId) {
+        Registration registration = getRegistrationById(registrationId);
+        StudentDTO student = studentApiClient.getStudentDetails(registration.getStudentId());
+        CourseDTO course = courseApiClient.getCourseDetails(registration.getCourseId());
+
+        return new CourseRegistrationDTO(registration, student, course);
+    }
+}

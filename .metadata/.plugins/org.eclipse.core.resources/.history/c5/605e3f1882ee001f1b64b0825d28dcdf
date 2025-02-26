@@ -1,0 +1,5 @@
+package om.wipro.orderservice.model;
+
+public class Mobile {
+
+}

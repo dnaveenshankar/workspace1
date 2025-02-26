@@ -1,0 +1,5 @@
+package com.wipro.courseservice.entity;
+
+public class Course {
+
+}

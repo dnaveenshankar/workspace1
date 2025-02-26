@@ -1,0 +1,58 @@
+package com.wipro.orderservice.service;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.wipro.orderservice.entity.Order;
+import com.wipro.orderservice.entity.OrderItem;
+import com.wipro.orderservice.repository.OrderRepository;
+
+import om.wipro.orderservice.model.Mobile;
+
+@Service
+public class OrderServiceImpl implements OrderService {
+
+	
+	@Autowired
+	private OrderRepository orderRepository;
+	
+	@Autowired
+	private RestTemplate restTemplate;
+	
+	@Override
+	public Order placeOrder(int customerIdD, List<OrderItem> orderItems) {
+		
+		for(OrderItem item:orderItems) {
+			int mobileID=item.getMobileId();
+			int qty = item.getQty();
+			ResponseEntity<Mobile> responseEntity = restTemplate.getForEntity("http://localhost:8081/mobiles/+mobileId", Mobile.class);
+			Mobile mobile = responseEntity.getBody();
+			double mobilePrice = mobile.getPrice();
+			double itemTotal = mobilePrice*qty;
+			item.setItemTotal(itemTotal);
+		}
+		Order order = new Order();
+		order.setOrderDate(LocalDate.now());
+		order.setOrderStatus("Pending");
+		order.setOrderAmount(0);
+		order.setCustomerId(customerIdD);
+		order.setOrderItems(orderItems);
+		
+		
+		orderRepository.save(order);
+		return null;
+	}
+
+	@Override
+	public Order getOrderDetails(int orderId) {
+		
+		return null;
+	}
+    
+}
+

@@ -1,0 +1,5 @@
+package com.wipro.security_demo.controller;
+
+public class ResourceController {
+
+}
